@@ -46,16 +46,38 @@ class StartActivity : AppCompatActivity() {
         }
     }
 
+//    private fun signInOrCreateAccount(email: String, password: String) {
+//        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
+//            if (task.isSuccessful) {
+//                val user = auth.currentUser
+//                updateUi(user)
+//            } else {
+//                createAccount(email, password)
+//            }
+//        }
+//    }
+
     private fun signInOrCreateAccount(email: String, password: String) {
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                val user = auth.currentUser
-                updateUi(user)
+                val userId = auth.currentUser?.uid
+                userId?.let {
+                    database.child("user").child(it).get().addOnSuccessListener { snapshot ->
+                        val user = snapshot.getValue(UserModel::class.java)
+                        if (user?.role == "user") {
+                            updateUi(auth.currentUser)
+                        } else {
+                            auth.signOut()
+                            Toast.makeText(this, "Access Denied", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
             } else {
                 createAccount(email, password)
             }
         }
     }
+
 
     private fun createAccount(email: String, password: String) {
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->

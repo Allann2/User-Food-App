@@ -67,15 +67,38 @@ class SigninActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveUserData() {
-        //retrieve data from input field
-        username = binding.signupName.text.toString()
-        email = binding.signupEmail.text.toString().trim()
-        password = binding.signupPassword.text.toString().trim()
+//    private fun saveUserData() {
+//        //retrieve data from input field
+//        username = binding.signupName.text.toString()
+//        email = binding.signupEmail.text.toString().trim()
+//        password = binding.signupPassword.text.toString().trim()
+//
+//        val user = UserModel(username,email,password)
+//        val userId = FirebaseAuth.getInstance().currentUser!!.uid
+//        //save data to Firebase Database
+//        database.child("user").child(userId).setValue(user)
+//    }
+private fun saveUserData() {
+    email = binding.signupEmail.text.toString().trim()
+    password = binding.signupPassword.text.toString().trim()
+    val userId = auth.currentUser?.uid
+    val user = UserModel(
+        name = binding.signupName.text.toString().trim(),
+        email = email,
+        password = password,
+//        phone = binding.signupPhone.text.toString().trim(),
+//        address = binding.signupAddress.text.toString().trim(),
+        role = "user" // Set role as "user"
+    )
 
-        val user = UserModel(username,email,password)
-        val userId = FirebaseAuth.getInstance().currentUser!!.uid
-        //save data to Firebase Database
-        database.child("user").child(userId).setValue(user)
+    userId?.let {
+        database.child("user").child(it).setValue(user)
+            .addOnSuccessListener {
+                Log.d("Database", "User data saved successfully")
+            }
+            .addOnFailureListener { e ->
+                Log.d("Database", "Error saving user data: ${e.message}")
+            }
     }
+}
 }

@@ -18,6 +18,7 @@ class PayOutActivity : AppCompatActivity() {
     private lateinit var name: ArrayList<String>
     private lateinit var address: ArrayList<String>
     private lateinit var phone: ArrayList<String>
+    private lateinit var totalAmount: String
     private lateinit var foodItemName: ArrayList<String>
     private lateinit var foodItemPrice: ArrayList<String>
     private lateinit var foodItemImage: ArrayList<String>
@@ -37,6 +38,17 @@ class PayOutActivity : AppCompatActivity() {
         //set user data
         setUserData()
 
+        //get user details
+        val intent = intent
+        foodItemName = intent.getStringArrayListExtra("FoodItemName") as ArrayList<String>
+        foodItemPrice = intent.getStringArrayListExtra("FoodItemPrice") as ArrayList<String>
+        foodItemImage = intent.getStringArrayListExtra("FoodItemImage") as ArrayList<String>
+        foodItemDescription = intent.getStringArrayListExtra("FoodItemDescription") as ArrayList<String>
+        foodItemQuantity = intent.getIntegerArrayListExtra("FoodItemQuantity") as ArrayList<Int>
+
+        totalAmount = calculateTotalAmount().toString()+"$"
+        binding.amountPayout.setText(totalAmount)
+
         binding.placeMyOrder.setOnClickListener {
             val bottomSheetDialog = CongratsBottomSheet()
             bottomSheetDialog.show(supportFragmentManager, "Test")
@@ -45,6 +57,22 @@ class PayOutActivity : AppCompatActivity() {
         binding.imageButton.setOnClickListener {
             finish()
         }
+    }
+
+    private fun calculateTotalAmount(): Int {
+        var totalAmount = 0
+        for (i in 0 until foodItemPrice.size) {
+            val price = foodItemPrice[i]
+            val lastChar = price.last()
+            val priceIntValue = if (lastChar == '$'){
+                price.dropLast(1).toInt()
+            }else{
+                price.toInt()
+            }
+            var quantity = foodItemQuantity[i]
+            totalAmount += priceIntValue * quantity
+        }
+        return totalAmount
     }
 
 
