@@ -12,8 +12,8 @@ import com.example.foodapp.databinding.MenuItemBinding
 import com.example.foodapp.detailsActivity
 
 class MenuAdapter( //6:47
-        private val menuItems: MutableList<MenuItem>,
-        private val requireContext : Context)
+    private val menuItems: List<MenuItem>,
+    private val requireContext: Context)
     : RecyclerView.Adapter<MenuAdapter.MenuViewHolder>() {
 
 
