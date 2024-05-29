@@ -88,7 +88,7 @@ class PayOutActivity : AppCompatActivity() {
     }
 
     private fun addOrderToHistory(orderDetails: OrderDetails) {
-        databaseReference.child("user").child("BuyHistory")
+        databaseReference.child("user").child(userId).child("BuyHistory")
             .child(orderDetails.itemPushKey!!)
             .setValue(orderDetails).addOnSuccessListener {
                 // Do something on success if needed

@@ -42,10 +42,8 @@ class CartFragment : Fragment() {
         retrieveCartItems()
 
         binding.proceedButton.setOnClickListener {
-            //get order items details before proceeding to check out
+            // Get order items details before proceeding to check out
             getOrderItemDetail()
-//            val intent = Intent(requireContext(), PayOutActivity::class.java)
-//            startActivity(intent)
         }
 
         return binding.root
@@ -53,21 +51,20 @@ class CartFragment : Fragment() {
 
     private fun getOrderItemDetail() {
         val orderIdReference: DatabaseReference =
-            database.reference.child("user").child(userId).child("cartItems")
+            database.reference.child("user").child(userId).child("CartItems")
 
         val foodName = mutableListOf<String>()
         val foodPrice = mutableListOf<String>()
         val foodDescription = mutableListOf<String>()
         val foodImage = mutableListOf<String>()
-        //get items quantities
         val foodQuantities = cartAdapter.getUpdatedItemsQuantities()
 
         orderIdReference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (foodSnapshot in snapshot.children) {
-                    //get the cartItems to respective list
+                    // Get the cart items to respective list
                     val orderItems = foodSnapshot.getValue(CartItems::class.java)
-                    //add items detais into list
+                    // Add items details into list
                     orderItems?.foodName?.let { foodName.add(it) }
                     orderItems?.foodPrice?.let { foodPrice.add(it) }
                     orderItems?.foodDescription?.let { foodDescription.add(it) }
