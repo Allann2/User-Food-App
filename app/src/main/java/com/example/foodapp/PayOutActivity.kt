@@ -73,8 +73,18 @@ class PayOutActivity : AppCompatActivity() {
         val time = System.currentTimeMillis()
         val itemPushKey = databaseReference.child("OrderDetails").push().key
         val orderDetails = OrderDetails(
-            userId, name, foodItemName, foodItemPrice, foodItemImage, foodItemQuantity,
-            address, phone, time, itemPushKey, false, false
+            userUid = userId,
+            userName = name,
+            foodNames = foodItemName,
+            foodPrices = foodItemPrice,
+            foodImages = foodItemImage,
+            foodQuantities = foodItemQuantity,
+            address = address,
+            phoneNumber = phone,
+            currentTime = time,
+            itemPushKey = itemPushKey,
+            orderAccepted = false,
+            paymentReceived = false
         )
         val orderReference = databaseReference.child("OrderDetails").child(itemPushKey!!)
         orderReference.setValue(orderDetails).addOnSuccessListener {
@@ -86,6 +96,7 @@ class PayOutActivity : AppCompatActivity() {
             Toast.makeText(this, "Failed to Order", Toast.LENGTH_LONG).show()
         }
     }
+
 
     private fun addOrderToHistory(orderDetails: OrderDetails) {
         databaseReference.child("user").child(userId).child("BuyHistory")

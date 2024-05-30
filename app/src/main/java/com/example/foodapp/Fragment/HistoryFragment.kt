@@ -54,9 +54,10 @@ class HistoryFragment : Fragment() {
     }
 
     private fun seeItemsRecentBuy() {
-        listOfOrderedItem.firstOrNull()?.let { recentBuy ->
+        listOfOrderedItem.firstOrNull()?.let {recentBuy ->
             val intent = Intent(requireContext(), recentOrderItems::class.java)
             intent.putExtra("RecentBuyOrderItem", recentBuy)
+//            intent.putExtra("RecentBuyOrderItem", listOfOrderedItem)
             startActivity(intent)
         }
     }
@@ -134,3 +135,5 @@ class HistoryFragment : Fragment() {
         }
     }
 }
+
+
