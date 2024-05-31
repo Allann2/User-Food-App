@@ -2,55 +2,29 @@ package com.example.foodapp.model
 
 import android.os.Parcel
 import android.os.Parcelable
-import java.io.Serializable
-import java.util.ArrayList
 
-class OrderDetails() : Serializable {
-    var userUid: String? = null
-    var userName: String? = null
-    var foodNames: MutableList<String>? = null
-    var foodImages: MutableList<String>? = null
-    var foodPrices: MutableList<String>? = null
-    var foodQuantities: MutableList<Int>? = null
-    var address: String? = null
-    var totalPrice: String? = null
-    var phoneNumber: String? = null
-    var orderAccepted: Boolean = false
-    var paymentReceived: Boolean = false
-    var itemPushKey: String? = null
+data class OrderDetails(
+    var userUid: String? = null,
+    var userName: String? = null,
+    var foodNames: MutableList<String>? = null,
+    var foodImages: MutableList<String>? = null,
+    var foodPrices: MutableList<String>? = null,
+    var foodQuantities: MutableList<Int>? = null,
+    var address: String? = null,
+    var totalPrice: String? = null,
+    var phoneNumber: String? = null,
+    var orderAccepted: Boolean = false,
+    var paymentReceived: Boolean = false,
+    var itemPushKey: String? = null,
     var currentTime: Long = 0
-
-    constructor(
-        userUid: String?,
-        userName: String,
-        foodNames: MutableList<String>,
-        foodPrices: MutableList<String>,
-        foodImages: MutableList<String>,
-        foodQuantities: MutableList<Int>,
-        address: String,
-        phoneNumber: String,
-        currentTime: Long,
-        itemPushKey: String?,
-        orderAccepted: Boolean,
-        paymentReceived: Boolean
-    ) : this() {
-        this.userUid = userUid
-        this.userName = userName
-        this.foodNames = foodNames
-        this.foodPrices = foodPrices
-        this.foodImages = foodImages
-        this.foodQuantities = foodQuantities
-        this.address = address
-        this.phoneNumber = phoneNumber
-        this.currentTime = currentTime
-        this.itemPushKey = itemPushKey
-        this.orderAccepted = orderAccepted
-        this.paymentReceived = paymentReceived
-    }
-
+) : Parcelable {
     constructor(parcel: Parcel) : this() {
         userUid = parcel.readString()
         userName = parcel.readString()
+        foodNames = parcel.createStringArrayList()
+        foodImages = parcel.createStringArrayList()
+        foodPrices = parcel.createStringArrayList()
+        foodQuantities = mutableListOf<Int>().apply { parcel.readList(this, Int::class.java.classLoader) }
         address = parcel.readString()
         totalPrice = parcel.readString()
         phoneNumber = parcel.readString()
@@ -60,9 +34,13 @@ class OrderDetails() : Serializable {
         currentTime = parcel.readLong()
     }
 
-    fun writeToParcel(parcel: Parcel, flags: Int) {
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(userUid)
         parcel.writeString(userName)
+        parcel.writeStringList(foodNames)
+        parcel.writeStringList(foodImages)
+        parcel.writeStringList(foodPrices)
+        parcel.writeList(foodQuantities)
         parcel.writeString(address)
         parcel.writeString(totalPrice)
         parcel.writeString(phoneNumber)
@@ -72,7 +50,7 @@ class OrderDetails() : Serializable {
         parcel.writeLong(currentTime)
     }
 
-    fun describeContents(): Int {
+    override fun describeContents(): Int {
         return 0
     }
 
